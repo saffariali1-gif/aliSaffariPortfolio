@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ali Saffari Portfolio</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* ------------------------------------- */
+    /* 1. FONT DEFINITION           */
+    /* ------------------------------------- */
+    @font-face {
+      font-family: 'FuturaLT';
+      src: url('./FuturaLT-Light.woff2') format('woff2');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'FuturaLT';
+      src: url('./FuturaLT-ExtraBold.woff2') format('woff2');
+      font-weight: 800;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    /* ===== KEYFRAMES FOR NEBULA FLOW (جریان سحابی) - حذف شد! (فقط برای پرفورمنس بالا) ===== */
+    /* @keyframes nebula-flow-optimized { ... } */ 
+
+    html { scroll-behavior: smooth; }
+    /* اطمینان از شتاب‌دهی سخت‌افزاری */
+    * { backface-visibility: hidden; } 
+    body {
+      overflow-x: hidden;
+      font-family: 'FuturaLT', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.6s ease, color 0.6s ease;
+      background-size: cover;
+      position: relative; 
+      z-index: 1;
+    }
+    section { transition: background-color 0.6s ease, color 0.5s ease; }
+
+
+    /* ===== 2. THEMES & OPTIMIZED NEBULA EFFECT (پس‌زمینه سحابی ثابت و فوق‌العاده سریع) ===== */
+   
+    body.glow {
+      color: #F9F6E6;
+      background-color: #000010; 
+      transition: background-color 0.7s ease, color 0.5s ease;
+    }
+
+    /* لایه اختصاصی برای افکت سحابی (کاملاً ثابت برای پرفورمنس نهایی) */
+    body.glow::before {
+        content: '';
+        position: fixed;
+        /* ابعاد بهینه */
+        top: -10%; 
+        left: -10%;
+        width: 120%; 
+        height: 120%;
+        z-index: -1;
+        opacity: 00; 
+        
+        /* **حذف کامل انیمیشن مداوم و فیلتر بلور برای رفع لگ** */
+        
+        background-image: 
+            radial-gradient(circle at 15% 95%, rgba(30, 144, 255, 0.08) 0%, transparent 70%), 
+            radial-gradient(circle at 85% 15%, rgba(61, 43, 226, 0.06) 0%, transparent 80%), 
+            radial-gradient(circle at 45% 55%, rgba(42, 255, 255, 0.04) 0%, transparent 60%), 
+            radial-gradient(circle at 70% 30%, rgba(112, 93, 255, 0.08) 0%, transparent 75%); 
+        
+        background-repeat: no-repeat;
+        
+        background-size: 50% 50%, 50% 50%, 50% 50%, 50% 50%;
+        
+        /* تنظیم مکان ثابت و کمی خارج از مرکز برای حفظ ظاهر سحابی */
+        transform: translate3d(-10px, -10px, 0); 
+    }
+
+    body.glow .floating-nav {
+      background: rgba(14, 14, 86, 0.7); 
+      border-color: rgba(124, 172, 240, 0.1);
+      box-shadow: 0 0 25px rgba(33, 94, 255, 0.4); 
+    }
+    body.glow a { color: #9cbcff; text-shadow: 0 0 8px #3b82f6; }
+    body.glow a:hover { color: #ffffff; }
+
+    /* ===== 3. GLOW BUTTONS (GO IN / DOWNLOAD PDF) (Optimized by removing inner blur) ===== */
+    #hero-cta-btn, #download-cta-btn {
+      --glow-color: rgb(75, 128, 241); 
+      --glow-spread-color: rgba(62, 120, 245, 0.7);
+      --btn-color: rgb(16, 16, 86); 
+
+      border: .25em solid var(--glow-color);
+      padding: 1em 3em !important;
+      color: var(--glow-color) !important;
+      font-size: 15px !important; 
+      font-weight: 500;
+      background-color: var(--btn-color) !important;
+      border-radius: 99em !important; 
+      outline: none;
+      box-shadow: 0 0 1em .25em var(--glow-color),
+                  0 0 4em 1em var(--glow-spread-color),
+                  inset 0 0 2em .25em var(--glow-color);
+      text-shadow: 0 0 .5em var(--glow-color);
+      position: relative;
+      transition: all 0.3s;
+      will-change: transform, box-shadow; 
+    }
+
+    #hero-cta-btn::after, #download-cta-btn::after {
+      pointer-events: none;
+      content: "";
+      position: absolute;
+      top: 120%;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: var(--glow-spread-color);
+      /* filter: blur(2em); <-- حذف شد */
+      opacity: 0; /* کاهش به ۰.۴ برای جبران حذف بلور */
+      transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
+      transition: all 0.3s;
+    }
+
+    #hero-cta-btn:hover, #download-cta-btn:hover {
+      color: var(--btn-color) !important;
+      background-color: var(--glow-color) !important;
+      box-shadow: 0 0 1em .25em var(--glow-color),
+                  0 0 4em 2em var(--glow-spread-color),
+                  inset 0 0 .75em .25em var(--glow-color);
+      transform: none !important; 
+    }
+
+    #hero-cta-btn:active, #download-cta-btn:active {
+      box-shadow: 0 0 0.6em .25em var(--glow-color),
+                  0 0 2.5em 2em var(--glow-spread-color),
+                  inset 0 0 .5em .25em var(--glow-color);
+    }
+    
+    /* ===== 3.1. GLOW STYLED ICONS (Now interactive) - No scale on hover ===== */
+    .icon-glow-style {
+      --glow-color: rgb(75, 128, 241); 
+      --glow-spread-color: rgba(62, 120, 245, 0.7);
+      --btn-color: rgb(16, 16, 86); 
+
+      border: .25em solid var(--glow-color) !important;
+      background-color: var(--btn-color) !important;
+      border-radius: 99em !important; 
+      /* استایل سایه ثابت */
+      box-shadow: 0 0 1em .25em var(--glow-color),
+                  0 0 4em 1em var(--glow-spread-color),
+                  inset 0 0 2em .25em var(--glow-color) !important;
+      
+      transition: all 0.3s !important;
+      will-change: box-shadow;
+      
+    }
+
+    .icon-glow-style:hover {
+      /* اعمال استایل هاور فقط برای درخشش و تغییر رنگ */
+      background-color: var(--glow-color) !important; /* رنگ پس زمینه به رنگ درخشان تغییر کند */
+      box-shadow: 0 0 1em .25em var(--glow-color),
+                  0 0 5em 2.5em var(--glow-spread-color), /* درخشش بیشتر */
+                  inset 0 0 .75em .25em var(--glow-color) !important;
+      cursor: pointer; 
+    }
+    
+    /* 4. CURSOR (Kept as is - highly optimized JS loop) */
+    .creative-cursor {
+      position: absolute; 
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #1c3bd1, #1f30b3);
+      pointer-events: none;
+      z-index: 9999;
+      box-shadow: 0 0 12px rgba(28,59,209,0.6);
+      mix-blend-mode: difference;
+      transition: transform .08s ease;
+      will-change: transform; 
+    }
+
+    /* 5. UTILITIES (Unchanged) */
+    .floating-nav {
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.4s ease;
+    }
+    .btn-hover { transition: all 0.3s ease; }
+    .btn-hover:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #12131e 0%, #F9F6E6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 7. TEXT NEON GLOW EFFECT (Unchanged) */
+    .text-neon-glow {
+        font-family: 'FuturaLT', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-weight: 800;
+        font-size: 48px; 
+        color: #d4e1fd; 
+        text-shadow: 
+            0 0 10px rgba(97, 149, 252, 0.6),
+            0 0 20px rgba(94, 134, 233, 0.4),
+            0 0 40px rgba(151, 186, 255, 0.2);
+        
+        transition: all 0.5s ease;
+        cursor: default; 
+        line-height: 1.2;
+    }
+    @media (min-width: 768px) {
+      .text-neon-glow { font-size: 60px; } 
+    }
+
+    .text-neon-glow:hover {
+        text-shadow: 
+            0 0 15px rgb(151, 180, 255),
+            0 0 30px rgba(151, 187, 255, 0.7),
+            0 0 60px rgba(151, 168, 255, 0.4);
+    }
+  </style>
+</head>
+
+<body class="glow"> 
+  <div class="creative-cursor hidden lg:block"></div>
+  <div class="flex items-center gap-6 text-sm font-medium"></div>
+  
+  <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center">
+    
+    <h1 id="ali-saffari-title" class="text-neon-glow mb-4 animate-on-scroll tracking-wider">
+      Ali Saffari
+    </h1>
+
+    <h3 class="text-2xl mb-3 animate-on-scroll tracking-wide">Graphic Designer & Visual Artist</h3>
+    <h3 class="mb-2 animate-on-scroll text-gray-400">1997 – Tehran</h3>
+    <button id="hero-cta-btn" class="mt-8">GO IN</button>
+  </section>
+
+
+  <link rel="icon" href="images/favicon.png">
+
+
+   <section id="portfolio" class="py-32 px-6"> <div class="text-center mb-16 animate-on-scroll">
+      <a class="text-4xl font-bold mb-4"></a>
+      <p class="max-w-3xl mx-auto mb-24 animate-on-scroll text-gray-400"></p>
+    </div>
+
+
+
+    <div class="text-center mb-16 animate-on-scroll space-y-40 max-w-5xl mx-auto">
+
+    <div class="category-item opacity-0 transition-opacity duration-700 ease-out translate-y-0">
+      <a class="text-3xl font-semibold text-center block tracking-wide" style="margin-bottom: 32px;">Poster | Illustration</a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <a href="images/Untitled-1-08.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/Iconica7.png" alt="Poster 1 Thumbnail" data-caption="Theatre Poster Designs" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-0 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-09.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/poster1_thumb.png" alt="Poster 2 Thumbnail" data-caption="Festival Poster Design" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-10.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/Iconica5.png" alt="Poster 3 Thumbnail" data-caption="Illustrative Visuals for Book Reviews" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-11.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/Iconica3.png" alt="Poster 3 Thumbnail" data-caption="Illustrative Visuals for Book Reviews" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-12.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/Iconica.png" alt="Poster 3 Thumbnail" data-caption="Illustrative Visuals for Book Reviews" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-13.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/book1_thumb.png" alt="Poster 3 Thumbnail" data-caption="Personal Poster and Illustration Projects" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-14.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/typography1_thumb.png" alt="Poster 3 Thumbnail" data-caption="Personal Poster and Illustration Projects" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="category-item opacity-0 transition-opacity duration-700 ease-out translate-y-4">
+      <a class="text-3xl font-semibold text-center block tracking-wide" style="margin-bottom: 32px;">Book / Catalogue</a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <a href="images/Untitled-1-03.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/002.png" alt="Book 1 Thumbnail" data-caption="Brand Catalog Design: Acting Institute" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-04.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/003.png" alt="Book 2 Thumbnail" data-caption="Book Design: Cover and Interior Layout" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-05.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/007.png" alt="Book 2 Thumbnail" data-caption="Book Design: Cover and Interior Layout" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        
+        <a href="images/Untitled-1-06.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/008.png" alt="Book 2 Thumbnail" data-caption="Product Catalog Design" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="category-item opacity-0 transition-opacity duration-700 ease-out translate-y-4">
+      <a class="text-3xl font-semibold text-center block tracking-wide" style="margin-bottom: 32px;">Typography / Logo</a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <a href="images/Untitled-1-20.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/004.png" alt="Logo 1 Thumbnail" data-caption="Typography" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-21.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/006.png" alt="Typography 1 Thumbnail" data-caption="Typography" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-20.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/009.png" alt="Logo 2 Thumbnail" data-caption="Typography" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="category-item opacity-0 transition-opacity duration-700 ease-out translate-y-4">
+      <a class="text-3xl font-semibold text-center block tracking-wide" style="margin-bottom: 32px;">Character Design</a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <a href="images/Untitled-1-18.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/001.png" alt="Character 1 Thumbnail" data-caption="A friendly mascot character" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="category-item opacity-0 transition-opacity duration-700 ease-out translate-y-4">
+      <a class="text-3xl font-semibold text-center block tracking-wide" style="margin-bottom: 32px;">Social Media</a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <a href="images/Untitled-1-16.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/005.png" alt="Social 1 Thumbnail" data-caption="Template design for an Instagram posts" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-17.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/006.png" alt="Social 2 Thumbnail" data-caption="Template design for an Instagram posts" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="category-item opacity-0 transition-opacity duration-700 ease-out translate-y-4">
+      <a class="text-3xl font-semibold text-center block tracking-wide" style="margin-bottom: 32px;">Ideas</a>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <a href="images/Untitled-1-23.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/004.png" alt="Idea 1 Thumbnail" data-caption="Sketch and concept art for a future project" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-24.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/010.png" alt="Idea 1 Thumbnail" data-caption="Sketch and concept art for a future project" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+        <a href="images/Untitled-1-25.png" class="image-link group relative overflow-hidden rounded-xl bg-white/10 border border-white/20 aspect-[4/4] cursor-pointer">
+          <img src="images/011.png" alt="Idea 1 Thumbnail" data-caption="Sketch and concept art for a future project" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+          <div class="absolute bottom-3 left-3 text-white text-sm opacity-0 group-hover:opacity-100 transition"></div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="about" class="py-24 px-20 text-center">
+    <a class="text-4xl font-bold animate-on-scroll mb-10 block">About Me</a>
+    <p class="max-w-3xl mx-auto mb-40 text-gray-200 animate-on-scroll">
+       I’m Ali Saffari, a graphic designer and visual artist from Tehran. My focus is on creating meaningful visual identities. I approach every project as a chance to solve problems beautifully.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="animate-on-scroll relative">
+        <a href="javascript:void(0)" class="copy-icon-trigger icon-glow-style w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6 cursor-pointer" data-text="Saffari.ali1@gmail.com">
+          <img src="images/my-email-icon.svg" alt="Email Icon" class="w-10 h-10" style="filter: brightness(0) invert(1);" />
+        </a>
+        <h3>Saffari.ali1@gmail.com</h3><p class="text-gray-400"></p>
+        <span class="copy-feedback absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white bg-blue-600/90 px-3 py-1 rounded-full text-xs font-regular opacity-0 transition-opacity duration-300 pointer-events-none">?</span>
+      </div>
+      
+      <div class="animate-on-scroll relative">
+        <a href="javascript:void(0)" class="copy-icon-trigger icon-glow-style w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6 cursor-pointer" data-text="+98-938 373 6959">
+          <img src="images/my-phone-icon.svg" alt="Phone Icon" class="w-10 h-10" style="filter: brightness(0) invert(1);" />
+        </a>
+        <h3>+98-938 373 6959</h3><p class="text-gray-400"></p>
+        <span class="copy-feedback absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white bg-blue-600/90 px-3 py-1 rounded-full text-xs font-regular opacity-0 transition-opacity duration-300 pointer-events-none">?</span>
+      </div>
+      
+      <div class="animate-on-scroll relative">
+        <a href="javascript:void(0)" class="copy-icon-trigger icon-glow-style w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6 cursor-pointer" data-text="Tehran, Iran">
+          <img src="images/my-location-icon.svg" alt="Location Icon" class="w-10 h-10" style="filter: brightness(0) invert(1);" />
+        </a>
+        <h3>Tehran, Iran</h3><p class="text-gray-400"></p>
+        <span class="copy-feedback absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white bg-blue-600/90 px-3 py-1 rounded-full text-xs font-regular opacity-0 transition-opacity duration-300 pointer-events-none">?</span>
+      </div>
+    </div>
+    
+    <a href="AliSaffari-ResuMe No.3.pdf" download="Ali_Saffari_Resume.pdf" class="inline-block mt-20" id="download-cta-btn">
+      DOWNLOAD PDF
+    </a>
+
+  </section>
+
+<div id="lightbox" class="fixed inset-0 z-[10000] bg-black/95 hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
+    <button id="lightbox-close" class="absolute top-6 right-6 text-white text-4xl leading-none z-50 p-2 opacity-75 hover:opacity-100 transition">
+      &times;
+    </button>
+    
+    <button id="lightbox-prev" class="absolute left-6 text-white text-5xl leading-none z-50 p-4 opacity-50 hover:opacity-100 transition hidden md:block">
+      &lt;
+    </button>
+    <button id="lightbox-next" class="absolute right-6 text-white text-5xl leading-none z-50 p-4 opacity-50 hover:opacity-100 transition hidden md:block">
+      &gt;
+    </button>
+
+    <div class="relative max-w-full max-h-full">
+      <img id="lightbox-image" src="" alt="Full Screen Image" class="max-w-full max-h-[90vh] object-contain" />
+      <p id="lightbox-caption" class="text-white text-center mt-4 text-lg"></p>
+    </div>
+  </div>
+
+<script>
+    // 5.1. Scroll animation
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.01});
+    // Threshold کاهش یافت تا انیمیشن سریعتر شروع شود و لگ کمتری احساس شود.
+    document.querySelectorAll('.animate-on-scroll').forEach(el=>observer.observe(el));
+
+    // 5.2. Hero CTA scroll
+    document.getElementById('hero-cta-btn').addEventListener('click', () => {
+      document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // 5.3. Optimized Creative Cursor and Visibility Control (Kept as is - highly performant)
+    const cursor = document.querySelector('.creative-cursor');
+    const heroSection = document.getElementById('hero');
+    let mouseX = 0, mouseY = 0;
+    let lastX = 0, lastY = 0;
+    let rafId = null;
+    let active = false;
+    let cursorVisible = false; 
+    const STEP = 0.25; 
+    const STOP_THRESHOLD = 0.5;
+
+    document.addEventListener('pointermove', e => {
+      mouseX = e.pageX; 
+      mouseY = e.pageY;
+      if (cursorVisible && !active) { 
+        active = true;
+        startCursorLoop();
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchstart', e => {
+      if (e.touches && e.touches[0]) {
+        mouseX = e.touches[0].pageX; 
+        mouseY = e.touches[0].pageY; 
+        if (cursorVisible && !active) { 
+          active = true;
+          startCursorLoop();
+        }
+      }
+    }, { passive: true });
+
+    function startCursorLoop() {
+      if (!cursor || rafId || !cursorVisible) return;
+
+      function step() {
+        const dx = mouseX - lastX;
+        const dy = mouseY - lastY;
+        
+        if (!cursorVisible || (Math.abs(dx) < STOP_THRESHOLD && Math.abs(dy) < STOP_THRESHOLD)) {
+          lastX = mouseX;
+          lastY = mouseY;
+          cursor.style.transform = `translate3d(${Math.round(lastX - 11)}px, ${Math.round(lastY - 11)}px, 0)`;
+          cancelAnimationFrame(rafId);
+          rafId = null;
+          active = false;
+          return;
+        }
+        
+        lastX += dx * STEP;
+        lastY += dy * STEP;
+        cursor.style.transform = `translate3d(${Math.round(lastX - 11)}px, ${Math.round(lastY - 11)}px, 0)`;
+        rafId = requestAnimationFrame(step);
+      }
+      rafId = requestAnimationFrame(step);
+    }
+    
+    // Observer برای کنترل دید نشانگر بر اساس موقعیت اسکرول
+    if (heroSection && cursor) {
+        const cursorObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                const isHeroVisible = entry.isIntersecting;
+
+                if (isHeroVisible) {
+                    cursorVisible = true;
+                    cursor.classList.remove('lg:hidden'); 
+                } else {
+                    cursorVisible = false;
+                    cursor.classList.add('lg:hidden'); 
+
+                    if (rafId) {
+                        cancelAnimationFrame(rafId);
+                        rafId = null;
+                        active = false;
+                    }
+                }
+            });
+        }, { 
+            root: null, 
+            threshold: 0.01 
+        }); 
+
+        cursorObserver.observe(heroSection);
+    }
+    
+    // 5.4. Theme Setup 
+    const body=document.body;
+    function setInitialTheme(){
+      body.classList.add('glow');
+      localStorage.setItem('theme','glow');
+    }
+    setInitialTheme();
+
+    // 5.5. LightBox Gallery JavaScript
+    document.addEventListener('DOMContentLoaded', () => {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const closeBtn = document.getElementById('lightbox-close');
+        const prevBtn = document.getElementById('lightbox-prev');
+        const nextBtn = document.getElementById('lightbox-next');
+        const imageLinks = document.querySelectorAll('.image-link');
+        let currentImages = []; 
+        let currentIndex = 0;
+
+        function openLightbox(index) {
+            if (currentImages.length === 0) return;
+            currentIndex = index;
+            const link = currentImages[currentIndex];
+            
+            const largeImageUrl = link.getAttribute('href');
+            const captionText = link.querySelector('img').getAttribute('data-caption') || '';
+
+            lightboxImage.src = largeImageUrl; 
+            lightboxCaption.textContent = captionText;
+            document.body.style.overflow = 'hidden';
+
+            lightbox.classList.remove('hidden');
+            
+            requestAnimationFrame(() => {
+                lightbox.classList.add('opacity-100');
+            });
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('opacity-100');
+            document.body.style.overflow = ''; 
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+            }, 300);
+        }
+
+        function showPrev() {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : currentImages.length - 1;
+            openLightbox(currentIndex);
+        }
+
+        function showNext() {
+            currentIndex = (currentIndex < currentImages.length - 1) ? currentIndex + 1 : 0;
+            openLightbox(currentIndex);
+        }
+
+        imageLinks.forEach((link, index) => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentImages = Array.from(document.querySelectorAll('.image-link'));
+                const clickedIndex = currentImages.findIndex(item => item === link);
+
+                openLightbox(clickedIndex);
+            });
+        });
+
+        closeBtn.addEventListener('click', closeLightbox);
+        prevBtn.addEventListener('click', showPrev);
+        nextBtn.addEventListener('click', showNext);
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('hidden')) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowRight') {
+                    showNext();
+                } else if (e.key === 'ArrowLeft') {
+                    showPrev();
+                }
+            }
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+    });
+
+    // 5.6. Portfolio fade-in effect
+    const fadeItems = document.querySelectorAll('.category-item');
+    function fadeInOnScroll() {
+        fadeItems.forEach(item => {
+            const rect = item.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100) {
+                item.classList.add('opacity-100');
+                item.classList.remove('translate-y-4');
+            }
+        });
+    }
+    window.addEventListener('scroll', fadeInOnScroll);
+    window.addEventListener('load', fadeInOnScroll);
+
+
+    // 5.8. White Flash Effect
+    (function(){
+      function findGoInTargets(){
+        const els = Array.from(document.querySelectorAll('a,button'));
+        return els.filter(el => {
+          const text = (el.textContent||'').trim().toLowerCase();
+          return text === 'go in' || text === 'download pdf';
+        });
+      }
+      function ensureFlash(){
+        let flash = document.getElementById('__white_flash_overlay__');
+        if (!flash) {
+          flash = document.createElement('div');
+          flash.id = '__white_flash_overlay__';
+          flash.style.cssText = 'position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:2147483647; transition:opacity 0.8s ease;';
+          document.body.appendChild(flash);
+        }
+        return flash;
+      }
+      function triggerFlash(){
+        const flash = ensureFlash();
+        flash.style.opacity = '1';
+        setTimeout(()=>{
+          flash.style.transition = 'opacity 1.6s ease';
+          flash.style.opacity = '0';
+        }, 400);
+      }
+      document.addEventListener('DOMContentLoaded', function(){
+        const targets = findGoInTargets();
+        targets.forEach(el => {
+          el.addEventListener('click', function(e){
+            triggerFlash();
+          }, { passive:false });
+        });
+      });
+    })();
+    
+    // 5.9. Copy Text on Icon Click (جدید)
+    document.addEventListener('DOMContentLoaded', () => {
+        const copyTriggers = document.querySelectorAll('.copy-icon-trigger');
+        const feedbackDuration = 1500; // 1.5 ثانیه نمایش پیام
+
+        copyTriggers.forEach(trigger => {
+            trigger.addEventListener('click', async (e) => {
+                e.preventDefault(); // جلوگیری از عملکرد پیش‌فرض لینک
+
+                const textToCopy = trigger.getAttribute('data-text');
+                if (!textToCopy) return;
+
+                const parentDiv = trigger.closest('.animate-on-scroll');
+                const feedbackSpan = parentDiv ? parentDiv.querySelector('.copy-feedback') : null;
+
+                try {
+                    // 1. کپی کردن متن با استفاده از Clipboard API مدرن
+                    await navigator.clipboard.writeText(textToCopy);
+
+                    // 2. نمایش بازخورد بصری
+                    if (feedbackSpan) {
+                        // تنظیم استایل اولیه (با ترنزیشن برای حرکت)
+                        feedbackSpan.style.transition = 'opacity 0.3s, transform 0.3s';
+                        // حرکت دادن پیام به سمت بالا و نمایش آن
+                        feedbackSpan.style.transform = 'translate(-50%, -150%)'; 
+                        feedbackSpan.style.opacity = '1';
+                        
+                        // مخفی کردن پیام پس از مدت زمان تعیین شده
+                        setTimeout(() => {
+                            feedbackSpan.style.opacity = '0';
+                            // بازگرداندن موقعیت به حالت اولیه برای اجرای مجدد
+                            feedbackSpan.style.transform = 'translate(-50%, -50%)'; 
+                        }, feedbackDuration);
+                    }
+
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    // فال‌بک برای مرورگرهای قدیمی یا حالت‌های ناامن
+                    fallbackCopyTextToClipboard(textToCopy);
+
+                    // نمایش بازخورد حتی برای فال‌بک
+                    if (feedbackSpan) {
+                        feedbackSpan.style.transition = 'opacity 0.3s, transform 0.3s';
+                        feedbackSpan.style.transform = 'translate(-50%, -150%)'; 
+                        feedbackSpan.style.opacity = '1';
+                        setTimeout(() => {
+                            feedbackSpan.style.opacity = '0';
+                            feedbackSpan.style.transform = 'translate(-50%, -50%)'; 
+                        }, feedbackDuration);
+                    }
+                }
+            });
+        });
+        
+        // تابع فال‌بک برای مرورگرهای قدیمی‌تر
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+    });
+
+  </script>
+</body>
+</html>
